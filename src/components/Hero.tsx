@@ -7,9 +7,20 @@ export default function Hero() {
   const [url, setUrl] = useState('');
   const { summarize, isLoading, error, data } = useSummarize();
 
+  const formatUrl = (inputUrl: string): string => {
+    // Check if the URL already has a protocol
+    if (/^https?:\/\//i.test(inputUrl)) {
+      return inputUrl;
+    }
+    
+    // Add https:// prefix if missing
+    return `https://${inputUrl}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await summarize(url);
+    const formattedUrl = formatUrl(url.trim());
+    await summarize(formattedUrl);
   };
 
   return (
@@ -27,11 +38,11 @@ export default function Hero() {
         <form onSubmit={handleSubmit} className="mt-8">
           <div className="flex gap-4">
             <input
-              type="url"
+              type="text"
               required
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://example.com/article"
+              placeholder="example.com/article"
               className="flex-1 min-w-0 px-4 py-2 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
